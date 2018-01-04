@@ -7,47 +7,37 @@ import java.util.List;
 
 public class TryCatcher {
 
-    public TryCatcher() {
-    }
+	public TryCatcher() {
+	}
 
-    public void throwIfnoHandler(Throwable throwable) throws Throwable {
-        throw throwable;
-    }
+	public static void throwIfnoHandler(Throwable throwable) throws Throwable {
+		throw throwable;
+	}
 
-    public TryCatcher(TryBlock tryBlock, CatchBlock catchBlock) {
-        try {
-            tryBlock.perform();
+	public static void tryBlock(TryBlock tryBlock, CatchBlock catchBlock) {
+		try {
+			tryBlock.perform();
+		} catch (Throwable throwable) {
+			catchBlock(throwable, catchBlock);
+		}
+	}
 
-        } catch (Throwable throwable) {
-            catchBlock.handle(throwable);
-        }
-    }
+	public static void tryBlockWithMultiCatches(TryBlock tryBlock, List<Pair> handlers) {
+		try {
+			tryBlock.perform();
+		} catch (Throwable throwable) {
+			multipleCatchBlocks(handlers);
+		}
+	}
 
-    private void catchBlock(Throwable throwable, CatchBlock catchBlock) {
-        catchBlock.handle(throwable);
-    }
+	private static void catchBlock(Throwable throwable, CatchBlock catchBlock) {
+		catchBlock.handle(throwable);
+	}
 
-    public void multipleCatchBlocks(List<Pair> handlers) {
-        for (Pair pair : handlers) {
-            pair.getHandler().handle(pair.getThrowable());
-        }
-    }
+	private static void multipleCatchBlocks(List<Pair> handlers) {
+		for (Pair pair : handlers) {
+			pair.getHandler().handle(pair.getThrowable());
+		}
+	}
 
-    public void tryBlock(TryBlock tryBlock, CatchBlock catchBlock) {
-        try {
-            tryBlock.perform();
-        } catch (Throwable throwable) {
-            catchBlock(throwable, catchBlock);
-        }
-    }
-
-    public void tryBlockWithMultiCatches(TryBlock tryBlock, List<Pair> handlers) {
-        try {
-            tryBlock.perform();
-        } catch (Throwable throwable) {
-            multipleCatchBlocks(handlers);
-        }
-    }
 }
-
-
